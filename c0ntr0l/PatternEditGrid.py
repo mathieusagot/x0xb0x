@@ -1,4 +1,4 @@
-from wxPython.wx import *
+import wx
 from Globals import *
 from pattern import Pattern
 import wx.grid as gridlib
@@ -38,13 +38,13 @@ class PatternEditGrid(gridlib.Grid):
         #
         self.columnLabels = []
         for i in range(0, NOTES_IN_PATTERN):
-            self.columnLabels.append(wxStaticText(parent, -1,
+            self.columnLabels.append(wx.StaticText(parent, -1,
                                                   str(i + 1),
-                                                  (position[0] + 12 + (i)*507/16, position[1] - 19)))
+                                                  (position[0] + 12 + (i)*507//16, position[1] - 19)))
 
-        wxStaticText(parent, -1, "Notes:", (position[0] - 46, position[1] + 8))
-#        wxStaticText(parent, -1, "Lengths:", (position[0] - 59, position[1] + 34))
-        wxStaticText(parent, -1, "Effects:", (position[0] - 50, position[1] + 60))
+        wx.StaticText(parent, -1, "Notes:", (position[0] - 46, position[1] + 8))
+#        wx.StaticText(parent, -1, "Lengths:", (position[0] - 59, position[1] + 34))
+        wx.StaticText(parent, -1, "Effects:", (position[0] - 50, position[1] + 60))
 
         #
         # Create a wxGrid GUI object and configure it to show the pattern
@@ -54,11 +54,11 @@ class PatternEditGrid(gridlib.Grid):
         self.SetColLabelSize(0)
         self.SetRowLabelSize(0)
         self.SetMargins(-100, -100)
-        self.SetDefaultCellAlignment(wxALIGN_CENTER, wxALIGN_CENTER)
+        self.SetDefaultCellAlignment(wx.ALIGN_CENTER, wx.ALIGN_CENTER)
         self.EnableEditing(False)
         self.DisableDragGridSize()
 
-        self.noteBitmap = wxBitmap('resources/sixteenth.gif', wxBITMAP_TYPE_GIF)
+        self.noteBitmap = wx.Bitmap('resources/sixteenth.gif', wx.BITMAP_TYPE_GIF)
         self.length = NOTES_IN_PATTERN
 
         #
@@ -69,19 +69,19 @@ class PatternEditGrid(gridlib.Grid):
         effectFont = self.GetCellFont(NOTE_ROW, 0)
         effectFont.SetPointSize(11)
         
-        for i in range(0,16):            
-            self.SetColSize(i, 512/16)
+        for i in range(0,16):
+            self.SetColSize(i, 512//16)
             self.enableColumn(i)
             self.SetCellFont(EFFECT_ROW, i, effectFont)
         for i in range(0,3):
-            self.SetRowSize(i, 84/3)
+            self.SetRowSize(i, 84//3)
             
         #
         # Bind some event handlers to deal with keystroke
         # navigation around the grid.
         #    
-        gridlib.EVT_GRID_CELL_LEFT_CLICK(self, self.OnGridClick)
-        EVT_KEY_DOWN(self, self.OnKeyDown)
+        self.Bind(gridlib.EVT_GRID_CELL_LEFT_CLICK, self.OnGridClick)
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
 
     #
     # Disable the entire pattern grid editor.
@@ -218,8 +218,8 @@ class PatternEditGrid(gridlib.Grid):
     def toggleEffect(self, keyChar, col):
         currentEffectString = str(self.GetCellValue(EFFECT_ROW, col))
 
-        # print 'Current effect string: ' + currentEffectString
-        # print 'Keychar is: ' + keyChar
+        # print('Current effect string: ' + currentEffectString
+        # print('Keychar is: ' + keyChar
         
         if keyChar in currentEffectString:
             currentEffectString = currentEffectString.replace(keyChar, '')
@@ -286,7 +286,7 @@ class PatternEditGrid(gridlib.Grid):
         self.SetCellRenderer(GRAPHIC_ROW, col, NoteRenderer(self.noteBitmap))
         self.SetCellValue(EFFECT_ROW, col, ' ')
 
-        colorDB = wxColourDatabase()
+        colorDB = wx.ColourDatabase()
         LIGHT_BLUE = colorDB.Find('LIGHT BLUE')
 
         for i in range(0,3):
@@ -302,7 +302,7 @@ class PatternEditGrid(gridlib.Grid):
         self.SetCellValue(EFFECT_ROW, col, ' ')
 
         for i in range(0,3):
-            self.SetCellBackgroundColour(i, col, wxLIGHT_GREY)
+            self.SetCellBackgroundColour(i, col, wx.LIGHT_GREY)
 
         self.columnLabels[col].Show(False)
 
@@ -383,7 +383,7 @@ class PatternEditGrid(gridlib.Grid):
                 # Meme - for debugging
                 #
                 if noteName == '':
-                    print 'WARNING -- no note name found in dictionary for note ' + str(i) + '.  Value was ' + hex(pattern.note(i).note)
+                    print('WARNING -- no note name found in dictionary for note ' + str(i) + '.  Value was ' + hex(pattern.note(i).note))
 
                 self.SetCellValue(NOTE_ROW, i, noteName)
                 self.SetCellValue(GRAPHIC_ROW, i, '1')
@@ -407,7 +407,7 @@ class PatternEditGrid(gridlib.Grid):
         for i in range(0, self.length):
             try:
                 note = MIDI_Dict[self.GetCellValue(NOTE_ROW,i)]
-            except KeyError, e:
+            except KeyError as e:
                 note = REST_NOTE
             
             if 'A' in self.GetCellValue(EFFECT_ROW, i):
@@ -440,9 +440,9 @@ class NoteRenderer(gridlib.PyGridCellRenderer):
         self.noteBitmap = noteBitmap
 
     def Draw(self, grid, attr, dc, rect, row, col, isSelected):
-        dc.SetBackgroundMode(wxSOLID)
-        dc.SetBrush(wxBrush(wxWHITE, wxSOLID))
-        dc.SetPen(wxTRANSPARENT_PEN)
+        dc.SetBackgroundMode(wx.SOLID)
+        dc.SetBrush(wx.Brush(wx.WHITE, wx.SOLID))
+        dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangleRect(rect)
         if grid.GetCellValue(row,col) != str(0):
             dc.DrawBitmap(self.noteBitmap, rect.x, rect.y, True)
@@ -450,7 +450,7 @@ class NoteRenderer(gridlib.PyGridCellRenderer):
     def GetBestSize(self, grid, attr, dc, row, col):
         w = self.noteBitmap.GetWidth()
         h = self.noteBitmap.GetHeight()
-        return wxSize(w, h)
+        return wx.Size(w, h)
 
     def Clone(self):
         return NoteRenderer(self.noteBitmap)

@@ -1,0 +1,5 @@
+# Python 3 dependencies for x0xb0x c0ntr0l application
+# Compatible with Python 3.8+
+
+pyserial==3.5
+wxPython==4.2.2

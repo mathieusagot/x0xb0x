@@ -53,10 +53,10 @@ class DataLink:
             header += chr(len(content) & 0xFF)
             
             packetToSend = header + content + crc8(header + content)
-            print 'Sending Packet: ' + b2a_hex(packetToSend)
+            print('Sending Packet: ' + b2a_hex(packetToSend).decode())
             self.s.write(packetToSend)
-        except Exception, e:
-            print 'Exception occured in sendBasicPacket(): ' + str(e)
+        except Exception as e:
+            print('Exception occured in sendBasicPacket(): ' + str(e))
             raise CommException('Error occured in sendBasicPacket()')
 
     def getBasicPacket(self, timeout = DEFAULT_TIMEOUT) :
@@ -71,14 +71,14 @@ class DataLink:
                     break
                 character = self.s.read()
             return packet
-        except Exception, e:
-            print 'Exception occured in getBasicPacket(): ' + str(e)
+        except Exception as e:
+            print('Exception occured in getBasicPacket(): ' + str(e))
             raise CommException('Error occured in getBasicPacket()')
 
     def packetWaiting(self):
         try:
             return self.s.inWaiting()
-        except Exception, e:
+        except Exception as e:
             raise CommException('Error occured in packetWaiting()')
 
     def getPushedPacket(self):
@@ -95,11 +95,11 @@ class DataLink:
         packet = self.getBasicPacket()
         if packet.isCorrect:
             packet.printMe()
-            print "PACKET OK!";
+            print("PACKET OK!")
             return True
         else:
             packet.printMe()
-            print 'Bad packet!'
+            print('Bad packet!')
             return False
 
     def sendPlayPatternMessage(self, pattern):
@@ -113,7 +113,7 @@ class DataLink:
             packet.printMe()
         else:
             packet.printMe()
-            print 'Bad Packet!'
+            print('Bad Packet!')
 
     def sendStopPatternMessage(self):
         self.s.flushInput()
@@ -123,8 +123,8 @@ class DataLink:
             packet.printMe() 
         else:
             packet.printMe()
-            print 'Bad packet!'
-            
+            print('Bad packet!')
+    
     def sendReadPatternMessage(self, bank, loc):
         self.s.flushInput()
         self.sendBasicPacket(READ_PATTERN_MSG, content = chr(bank) + chr(loc))
@@ -134,14 +134,14 @@ class DataLink:
             packet.printMe() 
         else:
             packet.printMe()
-            print 'Bad packet!'
+            print('Bad packet!')
 
 
         if packet.isCorrect and packet.messageType() == X0X_PATT_MSG:
             pat = Pattern(packet.content())
             return pat
         else:
-            print 'Error: Received a bad pattern.'
+            print('Error: Received a bad pattern.')
             raise BadPacketException('Received a bad pattern.')
         
 
@@ -157,7 +157,7 @@ class DataLink:
             packet.printMe()
         else:
             packet.printMe()
-            print 'Bad Packet!'
+            print('Bad Packet!')
 
     #
     # Sequencer run/stop control
@@ -165,37 +165,37 @@ class DataLink:
     def sendLoadPatternMessage(self, bank, loc) :
         self.sendBasicPacket(LOAD_PATTERN_MSG, content=[dec2hex(bank), dec2hex(loc)])
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendSetBankMessage(self, bank) :
         self.sendBasicPacket(SET_BANK_MSG, content = [dec2hex(bank)])
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendGetBankMessage(self) :
         self.sendBasicPacket(GET_BANK_MSG)
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendSetLocationMessage(self, loc) :
         self.sendBasicPacket(SET_LOCATION_MSG, content = [dec2hex(loc)])
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendGetLocationMessage(self) :
         self.sendBasicPacket(GET_LOCATION_MSG)
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendToggleSequencerMessage(self) :
         self.sendBasicPacket(TOGGLE_SEQUENCER_MSG)
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendGetSequencerStatePacket(self) :
         self.sendBasicPacket(GET_SEQUENCER_STATE_MSG)
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     #
     # Sync and tempo messages
@@ -203,12 +203,12 @@ class DataLink:
     def sendSetSyncPacket(self, source) :
         self.sendBasicPacket(SET_SYNC, content = [dec2hex(source)])
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendGetSyncPacket(self) :
         self.sendBasicPacket(GET_SYNC)
         packet = self.getBasicPacket()
-        print packet
+        print(packet)
 
     def sendGetTempoPacket(self) :
         self.s.flushInput()
@@ -218,11 +218,11 @@ class DataLink:
         packet = self.getBasicPacket()
         if packet.isCorrect:
             packet.printMe()
-            print "PACKET OK!";
+            print("PACKET OK!")
             return (ord(a2b_hex(packet.contentList[0]))<< 8) + ord(a2b_hex(packet.contentList[1]))
         else:
             packet.printMe()
-            print 'Bad packet!'
+            print('Bad packet!')
             return 0
 
     def sendSetTempoPacket(self, tempo) :
@@ -233,11 +233,11 @@ class DataLink:
         packet = self.getBasicPacket()
         if packet.isCorrect:
             #packet.printMe()
-            print "PACKET OK!";
+            print("PACKET OK!")
         else:
             packet.printMe()
-            print 'Bad packet!'
-        
+            print('Bad packet!')
+
 
 
         

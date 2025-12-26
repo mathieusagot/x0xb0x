@@ -69,7 +69,7 @@ class Pattern:
 
 
     def printMe(self):
-        print '---> Pattern '
+        print('---> Pattern ')
         for i in range(len(self.notes)):
             patstr = str(self.notes[i].note)
             efxstr = '        '
@@ -81,8 +81,8 @@ class Pattern:
                 efxstr += 'U '
             if self.notes[i].transpose == TRANSPOSE_DOWN:
                 efxstr += 'D '
-            print patstr + efxstr
-        print '---->'
+            print(patstr + efxstr)
+        print('---->')
         
 
 #

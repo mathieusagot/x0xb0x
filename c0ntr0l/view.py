@@ -32,12 +32,12 @@ class View:
     #
     def updateSerialStatus(self, state):
         try:
-            if state == TRUE:
+            if state == True:
                 self.mainWindow.statusBar.SetStatusText("Serial Port: Connected", 1)
             else:
                 self.mainWindow.statusBar.SetStatusText("Serial Port: Disconnected", 1)
-        except Exception, e:
-            print 'Exception occured: ' + str(e)
+        except Exception as e:
+            print('Exception occured: ' + str(e))
             
     def updateSelectedSerialPort(self, name):
         menuId = self.mainWindow.portMenu.FindItem(name)
@@ -57,11 +57,11 @@ class View:
     def updateStatusText(self, string):
         try:
             self.mainWindow.statusBar.SetStatusText(string, 0)
-        except Exception, e:
-            print 'Exception occured: ' + str(e)
+        except Exception as e:
+            print('Exception occured: ' + str(e))
 
     def displayModalStatusError(self, string):
-        print string
+        print(string)
         dlg = wx.MessageDialog(self.mainWindow, string, 'x0xb0x c0ntr0l', wx.OK | wx.ICON_INFORMATION) 
         dlg.ShowModal() 
         dlg.Destroy()
