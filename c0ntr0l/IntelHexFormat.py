@@ -79,7 +79,7 @@ class IntelHexFile:
                     for i in range(record.recordLength):
                         hexArray[record.startAddress + i] = record.dataBytes[2*i:2*i+2]
         else:
-            print '   Warning: size is zero or negative.'
+            print('   Warning: size is zero or negative.')
         return hexArray[startAddress:startAddress+size]
 
     def toHexString(self, size=None, startAddress=0):
@@ -112,7 +112,7 @@ class IntelHexFileRecord:
             self.dataBytes = line[9:9+2*self.recordLength]
             self.checksum = int(line[9+2*self.recordLength:2+9+2*self.recordLength],16)
         else:
-            print '   ERROR.  The following record is malformed:'
-            print line
+            print('   ERROR.  The following record is malformed:')
+            print(line)
 
 

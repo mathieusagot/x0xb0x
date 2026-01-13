@@ -1,4 +1,4 @@
-from wxPython.wx import *
+import wx
 from Globals import *
 import wx.grid as gridlib
 
@@ -19,12 +19,12 @@ class PatternPlayGrid(gridlib.Grid):
         self.DisableDragGridSize()
 
         for i in range(0,8):            
-            self.SetColSize(i, 512/8)
+            self.SetColSize(i, 512//8)
             self.SetRowSize(0, 64)
 
 
-        gridlib.EVT_GRID_CELL_LEFT_CLICK(self, self.OnGridClick)
-        EVT_KEY_DOWN(self, self.OnKeyDown)
+        self.Bind(gridlib.EVT_GRID_CELL_LEFT_CLICK, self.OnGridClick)
+        self.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
 
     #
     # Event handler for keyboard actions
@@ -65,7 +65,7 @@ class PatternPlayGrid(gridlib.Grid):
         #
         # Set the current pattern to the grid square that was clicked on...
         #
-        print "Grid click on column: " + str(evt.GetCol())
+        print("Grid click on column: " + str(evt.GetCol()))
         self.SetFocus()
         evt.Skip()
 
@@ -86,9 +86,9 @@ class NoteRenderer(gridlib.PyGridCellRenderer):
         self.noteBitmap = noteBitmap
 
     def Draw(self, grid, attr, dc, rect, row, col, isSelected):
-        dc.SetBackgroundMode(wxSOLID)
-        dc.SetBrush(wxBrush(wxWHITE, wxSOLID))
-        dc.SetPen(wxTRANSPARENT_PEN)
+        dc.SetBackgroundMode(wx.SOLID)
+        dc.SetBrush(wx.Brush(wx.WHITE, wx.SOLID))
+        dc.SetPen(wx.TRANSPARENT_PEN)
         dc.DrawRectangleRect(rect)
         if grid.GetCellValue(row,col) != str(0):
             dc.DrawBitmap(self.noteBitmap, rect.x, rect.y, True)
@@ -96,7 +96,7 @@ class NoteRenderer(gridlib.PyGridCellRenderer):
     def GetBestSize(self, grid, attr, dc, row, col):
         w = self.noteBitmap.GetWidth()
         h = self.noteBitmap.GetHeight()
-        return wxSize(w, h)
+        return wx.Size(w, h)
 
     def Clone(self):
         return NoteRenderer(self.noteBitmap)

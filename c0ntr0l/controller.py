@@ -35,16 +35,16 @@ class Controller:
 
     def GetConfigValue(self, key):
         try:
-            # print 'Reading ' + key + ' : ' + self.cfgFile.Read(key)
+            # print('Reading ' + key + ' : ' + self.cfgFile.Read(key))
             return self.cfgFile.Read(key)
-        except Exception, e:
+        except Exception as e:
             raise ConfigException("Could not load config value: " + key + ".")
 
     def SetConfigValue(self, key, value):
         try:
-            # print 'Writing ' + key + ' : ' + value
+            # print('Writing ' + key + ' : ' + value)
             self.cfgFile.Write(key, value)
-        except Exception, e:
+        except Exception as e:
             raise ConfigException("Could not write config value: " + key + ".")
             
 

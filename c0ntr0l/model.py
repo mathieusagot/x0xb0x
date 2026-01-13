@@ -34,13 +34,13 @@ class Model:
         #
         # Meme - Linux support has not yet been implemented here.
         #
-	print "OS is "+os.name
+        print("OS is "+os.name)
         if os.name == 'posix':
             self.serialPorts = glob.glob('/dev/cu.*') + glob.glob('/dev/tts/ttyUSB*') + glob.glob('/dev/ttyUSB*')
         elif os.name == 'nt':
             self.serialPorts = ['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'COM10']
 
-        print "Found the following serial ports: "+str(self.serialPorts)
+        print("Found the following serial ports: "+str(self.serialPorts))
 
 
         #
@@ -119,8 +119,8 @@ class Model:
             self.controller.updateSerialStatus(True)
             return True
 
-        except serial.SerialException, sce:
-            print 'Error: Unable to open serial port ' + self.currentSerialPort + ' at ' + str(DEFAULT_BAUD_RATE) + 'bps'
+        except serial.SerialException as sce:
+            print('Error: Unable to open serial port ' + self.currentSerialPort + ' at ' + str(DEFAULT_BAUD_RATE) + 'bps')
             serialconnection = None
 
             self.controller.updateStatusText('Error: Unable to open serial port ' + self.currentSerialPort + ' at ' + str(DEFAULT_BAUD_RATE) + 'bps')
@@ -157,7 +157,7 @@ class Model:
             self.controller.updateStatusText('')
             return True
         else:
-            print 'Error: Cannot select the serial port named ' + name
+            print('Error: Cannot select the serial port named ' + name)
             return False
 
     #
@@ -173,9 +173,9 @@ class Model:
             self.controller.updateStatusText('Uploading firmware....')
             try:
                 AvrProgram.doFlashProgramming(self.serialconnection, ihx.toByteString())
-                
-            except serial.SerialException, e:
-                self.controller.updateStatusText('Programming failed: ' + e.value)
+
+            except serial.SerialException as e:
+                self.controller.updateStatusText('Programming failed: ' + str(e))
 
             self.controller.updateStatusText('Firmware Upload Complete.')
 
@@ -192,11 +192,11 @@ class Model:
             self.controller.updateCurrentPattern(pattern)
             self.controller.updateStatusText('Pattern loaded from bank: ' + str(bank) + ' loc: ' + str(loc))
             return True
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.updateStatusText('Packet error occured: ' + str(e))
             self.commlock = False
             return False
-        except AttributeError, e:
+        except AttributeError as e:
             self.controller.updateStatusText('Error: Not connected.  Please choose a serial port from the Serial menu.')
             self.commlock = False
             return False
@@ -212,11 +212,11 @@ class Model:
             self.commlock = False
             self.controller.updateStatusText('Pattern written to bank: ' + str(bank) + ' loc: ' + str(loc))
             return True
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.updateStatusText('Packet error occured: ' + str(e))
             self.commlock = False
             return False
-        except AttributeError, e:
+        except AttributeError as e:
             self.commlock = False
             self.controller.updateStatusText('Error: No serial port available.  Please choose a serial port from the Serial menu.')
             return False
@@ -229,11 +229,11 @@ class Model:
             self.commlock = False
             self.controller.updateStatusText('Playing pattern')
             return True
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.updateStatusText('Packet error occured: ' + str(e))
             self.commlock = False
             return False
-        except AttributeError, e:
+        except AttributeError as e:
             self.controller.updateStatusText('Error: No serial port available.  Please choose a serial port from the Serial menu.')
             self.commlock = False
             return False
@@ -245,15 +245,15 @@ class Model:
             self.commlock = False
             self.controller.updateStatusText('Stopped playing pattern')
             return True
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.updateStatusText('Packet error occured: ' + str(e))
             self.commlock = False
             return False
-        except AttributeError, e:
+        except AttributeError as e:
             self.controller.updateStatusText('Error: No serial port available.  Please choose a serial port from the Serial menu.')
             self.commlock = False
             return False
-    
+
     def backupAllPatterns(self, toFile):
         pf = PatternFile.PatternFile()
         try:
@@ -264,13 +264,13 @@ class Model:
                     pf.appendPattern(pattern, bank, loc)
             pf.writeFile(toFile)
             self.controller.updateStatusText('EEPROM download was succesful.')
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.displayModalStatusError('An unexpected communication error occured while downloading patterns.  Pattern file was not saved.')
-        except AttribuetError, e:
+        except AttribuetError as e:
             self.controller.displayModalStatusError('No serial port connected.  Please select a serial port and try again.')
-        except IOError, e:
+        except IOError as e:
             self.controller.displayModalStatusError('Error writing x0xb0x pattern file.')
-        except PatternFileException, e:
+        except PatternFileException as e:
             self.controller.displayModalStatusError('Error writing x0xb0x pattern file.')
         self.commlock = False
 
@@ -283,13 +283,13 @@ class Model:
                 self.commlock = True
                 self.dataLink.sendWritePatternMessage(pattern, bank - 1, loc - 1)
             self.controller.updateStatusText('EEPROM upload was succesful.')
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.displayModalStatusError('An unexpected communication error occured while downloading patterns.  Pattern file was not saved.')
-        except AttributeError, e:
+        except AttributeError as e:
             self.controller.displayModalStatusError('No serial port connected.  Please select a serial port and try again.')
-        except IOError, e:
+        except IOError as e:
             self.controller.displayModalStatusError('Error reading x0xb0x pattern file.')
-        except PatternFileException, e:
+        except PatternFileException as e:
             self.controller.displayModalStatusError('Error reading x0xb0x pattern file.')
         self.commlock = False
                             
@@ -300,9 +300,9 @@ class Model:
                     self.commlock = True
                     self.dataLink.sendWritePatternMessage(Pattern(), bank - 1, loc - 1)
             self.controller.updateStatusText('EEPROM successfully erased.')
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.displayModalStatusError('An unexpected communication error occured while downloading patterns.  Pattern file was not saved.')
-        except AttributeError, e:
+        except AttributeError as e:
             self.controller.displayModalStatusError('No serial port connected.  Please select a serial port and try again.')
         self.commlock = False
 
@@ -318,11 +318,11 @@ class Model:
             self.commlock = False
             self.controller.updateTempo(tempo)
             return True
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.updateStatusText('Packet error occured: ' + str(e))
             self.commlock = False
             return False
-        except AttributeError, e:
+        except AttributeError as e:
             self.controller.updateStatusText('Error: Not connected.  Please choose a serial port from the Serial menu.')
             self.commlock = False
             return False
@@ -334,11 +334,11 @@ class Model:
             self.dataLink.sendSetTempoPacket(tempo)
             self.commlock = False
             return True
-        except BadPacketException, e:
+        except BadPacketException as e:
             self.controller.updateStatusText('Packet error occured: ' + str(e))
             self.commlock = False
             return False
-        except AttributeError, e:
+        except AttributeError as e:
             self.controller.updateStatusText('Error: Not connected.  Please choose a serial port from the Serial menu.')
             self.commlock = False
             return False
@@ -365,7 +365,7 @@ class WorkerThread(Thread):
         Thread.__init__(self)
         self._model = model
         self._want_abort = 0
-        print 'thread start\n'
+        print('thread start\n')
         self.start()
 
     def run(self):

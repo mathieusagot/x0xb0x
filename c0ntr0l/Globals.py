@@ -25,13 +25,15 @@
 
 #----------------------------------------------------------------------------
 # Name:         Globals.py
-# Purpose:      Global variables 
+# Purpose:      Global variables
 #
 # Author:       Michael Broxton
 #
 # Created:      A long time ago, in a galaxy far, far away...
 # Copyright:    (c) 2004 by MIT Media Laboratory
 #----------------------------------------------------------------------------
+
+import os
 
 APP_NAME = "x0xb0x c0ontr0l"
 
@@ -96,7 +98,7 @@ def hexToSignedInt(hexString) :
 
 def opj(path):
     """Convert paths to the platform-specific separator"""
-    return apply(os.path.join, tuple(path.split('/')))
+    return os.path.join(*path.split('/'))
 
 
 #
